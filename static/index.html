@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bybit Trading Bot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Bybit Trading Bot</h1>
+            <div class="status-bar">
+                <span id="status-indicator" class="status-indicator">●</span>
+                <span id="status-text">Conectando...</span>
+                <span id="testnet-badge" class="badge">TESTNET</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <section class="card">
+                <h2>💰 Saldo</h2>
+                <div id="balance-container" class="loading">Carregando...</div>
+            </section>
+
+            <section class="card">
+                <h2>📊 Posições Abertas</h2>
+                <div id="positions-container" class="loading">Carregando...</div>
+            </section>
+
+            <section class="card">
+                <h2>📈 Preços em Tempo Real</h2>
+                <div id="prices-container" class="loading">Carregando...</div>
+            </section>
+
+            <section class="card">
+                <h2>🎯 Gerar Sinal de Trading</h2>
+                <div class="form-group">
+                    <label for="signal-symbol">Símbolo:</label>
+                    <select id="signal-symbol" class="input-field">
+                        <option value="BTCUSDT">BTCUSDT</option>
+                        <option value="ETHUSDT">ETHUSDT</option>
+                        <option value="BNBUSDT">BNBUSDT</option>
+                    </select>
+                </div>
+                <button id="generate-signal-btn" class="btn btn-primary">Gerar Sinal SMA</button>
+                <div id="signal-result" class="signal-result"></div>
+            </section>
+
+            <section class="card">
+                <h2>📝 Criar Ordem</h2>
+                <div class="form-group">
+                    <label for="order-symbol">Símbolo:</label>
+                    <select id="order-symbol" class="input-field">
+                        <option value="BTCUSDT">BTCUSDT</option>
+                        <option value="ETHUSDT">ETHUSDT</option>
+                        <option value="BNBUSDT">BNBUSDT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="order-side">Lado:</label>
+                    <select id="order-side" class="input-field">
+                        <option value="Buy">Buy (Comprar)</option>
+                        <option value="Sell">Sell (Vender)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="order-type">Tipo:</label>
+                    <select id="order-type" class="input-field">
+                        <option value="Market">Market (Mercado)</option>
+                        <option value="Limit">Limit (Limitada)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="order-qty">Quantidade:</label>
+                    <input type="number" id="order-qty" class="input-field" step="0.001" placeholder="0.001">
+                </div>
+                <div class="form-group" id="price-group" style="display:none;">
+                    <label for="order-price">Preço:</label>
+                    <input type="number" id="order-price" class="input-field" step="0.01" placeholder="0.00">
+                </div>
+                <button id="create-order-btn" class="btn btn-success">Criar Ordem</button>
+                <div id="order-result" class="order-result"></div>
+            </section>
+
+            <section class="card">
+                <h2>📋 Ordens Abertas</h2>
+                <button id="refresh-orders-btn" class="btn btn-secondary">Atualizar Ordens</button>
+                <div id="orders-container" class="loading">Carregando...</div>
+            </section>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

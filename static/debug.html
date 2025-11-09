@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Debug - Bybit Trading Bot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4ade80;
+        }
+        .endpoint {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .endpoint h2 {
+            color: #60a5fa;
+            margin-top: 0;
+        }
+        button {
+            background: #4ade80;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #22c55e;
+        }
+        pre {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .error {
+            color: #ef4444;
+        }
+        .success {
+            color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 API Debug Dashboard</h1>
+        <p>Use this page to debug API responses and identify issues.</p>
+        
+        <div class="endpoint">
+            <h2>🔥 Quick Debug - All Endpoints</h2>
+            <button onclick="testAll()">Test All Endpoints</button>
+            <pre id="all-result">Click button to test...</pre>
+        </div>
+        
+        <div class="endpoint">
+            <h2>💰 Balance Endpoint</h2>
+            <button onclick="testBalance()">Test Balance</button>
+            <pre id="balance-result">Click button to test...</pre>
+        </div>
+        
+        <div class="endpoint">
+            <h2>📊 Positions Endpoint</h2>
+            <button onclick="testPositions()">Test Positions</button>
+            <pre id="positions-result">Click button to test...</pre>
+        </div>
+        
+        <div class="endpoint">
+            <h2>📝 Orders Endpoint</h2>
+            <button onclick="testOrders()">Test Orders</button>
+            <pre id="orders-result">Click button to test...</pre>
+        </div>
+        
+        <div class="endpoint">
+            <h2>💹 Price Endpoint (BTCUSDT)</h2>
+            <button onclick="testPrice()">Test Price</button>
+            <pre id="price-result">Click button to test...</pre>
+        </div>
+    </div>
+
+    <script>
+        async function testAll() {
+            const result = document.getElementById('all-result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/debug/raw');
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+                result.className = 'error';
+            }
+        }
+        
+        async function testBalance() {
+            const result = document.getElementById('balance-result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/balance');
+                const data = await response.json();
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        async function testPositions() {
+            const result = document.getElementById('positions-result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/positions');
+                const data = await response.json();
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        async function testOrders() {
+            const result = document.getElementById('orders-result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/orders');
+                const data = await response.json();
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        async function testPrice() {
+            const result = document.getElementById('price-result');
+            result.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/price/BTCUSDT');
+                const data = await response.json();
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
