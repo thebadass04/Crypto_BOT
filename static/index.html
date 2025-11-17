@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bybit Trading Bot</title>
+    <title>Bybit Trading Bot - Dark Edition</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -15,79 +16,166 @@
                 <span id="status-text">Conectando...</span>
                 <span id="testnet-badge" class="badge">TESTNET</span>
             </div>
+            <div class="nav-container">
+                <button class="nav-btn active" data-section="dashboard">📊 Dashboard</button>
+                <button class="nav-btn" data-section="automated-trading">⚡ Automated Trading</button>
+                <button class="nav-btn" data-section="manual-trading">🎯 Manual Trading</button>
+            </div>
         </header>
 
-        <div class="content">
-            <section class="card">
-                <h2>💰 Saldo</h2>
-                <div id="balance-container" class="loading">Carregando...</div>
-            </section>
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section active">
+            <div class="content">
+                <section class="card">
+                    <h2>💰 Saldo</h2>
+                    <div id="balance-container" class="loading">Carregando...</div>
+                </section>
 
-            <section class="card">
-                <h2>📊 Posições Abertas</h2>
-                <div id="positions-container" class="loading">Carregando...</div>
-            </section>
+                <section class="card">
+                    <h2>📊 Posições Abertas</h2>
+                    <div id="positions-container" class="loading">Carregando...</div>
+                </section>
 
-            <section class="card">
-                <h2>📈 Preços em Tempo Real</h2>
-                <div id="prices-container" class="loading">Carregando...</div>
-            </section>
+                <section class="card">
+                    <h2>📈 Preços em Tempo Real</h2>
+                    <div id="prices-container" class="loading">Carregando...</div>
+                </section>
 
-            <section class="card">
-                <h2>🎯 Gerar Sinal de Trading</h2>
-                <div class="form-group">
-                    <label for="signal-symbol">Símbolo:</label>
-                    <select id="signal-symbol" class="input-field">
-                        <option value="BTCUSDT">BTCUSDT</option>
-                        <option value="ETHUSDT">ETHUSDT</option>
-                        <option value="BNBUSDT">BNBUSDT</option>
-                    </select>
-                </div>
-                <button id="generate-signal-btn" class="btn btn-primary">Gerar Sinal SMA</button>
-                <div id="signal-result" class="signal-result"></div>
-            </section>
+                <section class="card">
+                    <h2>📋 Ordens Abertas</h2>
+                    <button id="refresh-orders-btn" class="btn btn-secondary">Atualizar Ordens</button>
+                    <div id="orders-container" class="loading">Carregando...</div>
+                </section>
+            </div>
+        </div>
 
-            <section class="card">
-                <h2>📝 Criar Ordem</h2>
-                <div class="form-group">
-                    <label for="order-symbol">Símbolo:</label>
-                    <select id="order-symbol" class="input-field">
-                        <option value="BTCUSDT">BTCUSDT</option>
-                        <option value="ETHUSDT">ETHUSDT</option>
-                        <option value="BNBUSDT">BNBUSDT</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="order-side">Lado:</label>
-                    <select id="order-side" class="input-field">
-                        <option value="Buy">Buy (Comprar)</option>
-                        <option value="Sell">Sell (Vender)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="order-type">Tipo:</label>
-                    <select id="order-type" class="input-field">
-                        <option value="Market">Market (Mercado)</option>
-                        <option value="Limit">Limit (Limitada)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="order-qty">Quantidade:</label>
-                    <input type="number" id="order-qty" class="input-field" step="0.001" placeholder="0.001">
-                </div>
-                <div class="form-group" id="price-group" style="display:none;">
-                    <label for="order-price">Preço:</label>
-                    <input type="number" id="order-price" class="input-field" step="0.01" placeholder="0.00">
-                </div>
-                <button id="create-order-btn" class="btn btn-success">Criar Ordem</button>
-                <div id="order-result" class="order-result"></div>
-            </section>
+        <!-- Automated Trading Section -->
+        <div id="automated-trading" class="content-section">
+            <div class="content">
+                <section class="card">
+                    <h2>⚡ Automated Trading System</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Trades</div>
+                            <div class="stat-value" id="total-trades">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-value" id="win-rate">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total P&L</div>
+                            <div class="stat-value" id="total-pnl">$0.00</div>
+                        </div>
+                    </div>
 
-            <section class="card">
-                <h2>📋 Ordens Abertas</h2>
-                <button id="refresh-orders-btn" class="btn btn-secondary">Atualizar Ordens</button>
-                <div id="orders-container" class="loading">Carregando...</div>
-            </section>
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <div class="strategy-title">📈 SMA Crossover Strategy</div>
+                            <div class="strategy-status inactive" id="strategy-status">INACTIVE</div>
+                        </div>
+                        
+                        <div class="strategy-params">
+                            <div class="param-item">
+                                <div class="param-label">Fast SMA</div>
+                                <div class="param-value">9</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">Slow SMA</div>
+                                <div class="param-value">21</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">Symbol</div>
+                                <div class="param-value" id="auto-symbol">BTCUSDT</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">Interval</div>
+                                <div class="param-value">1H</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="auto-trade-symbol">Select Symbol:</label>
+                            <select id="auto-trade-symbol" class="input-field">
+                                <option value="BTCUSDT">BTCUSDT</option>
+                                <option value="ETHUSDT">ETHUSDT</option>
+                                <option value="BNBUSDT">BNBUSDT</option>
+                            </select>
+                        </div>
+
+                        <div class="strategy-controls">
+                            <button id="start-auto-trading-btn" class="btn btn-success">Start Auto Trading</button>
+                            <button id="stop-auto-trading-btn" class="btn btn-danger" disabled>Stop Auto Trading</button>
+                            <button id="test-strategy-btn" class="btn btn-primary">Test Strategy</button>
+                        </div>
+                    </div>
+
+                    <div id="strategy-result" class="signal-result"></div>
+                </section>
+
+                <section class="card">
+                    <h2>📜 Trade Log</h2>
+                    <div class="trade-log" id="trade-log">
+                        <div class="empty-state">No trades executed yet. Start automated trading to see activity.</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Manual Trading Section -->
+        <div id="manual-trading" class="content-section">
+            <div class="content">
+                <section class="card">
+                    <h2>🎯 Gerar Sinal de Trading</h2>
+                    <div class="form-group">
+                        <label for="signal-symbol">Símbolo:</label>
+                        <select id="signal-symbol" class="input-field">
+                            <option value="BTCUSDT">BTCUSDT</option>
+                            <option value="ETHUSDT">ETHUSDT</option>
+                            <option value="BNBUSDT">BNBUSDT</option>
+                        </select>
+                    </div>
+                    <button id="generate-signal-btn" class="btn btn-primary">Gerar Sinal SMA</button>
+                    <div id="signal-result" class="signal-result"></div>
+                </section>
+
+                <section class="card">
+                    <h2>📝 Criar Ordem</h2>
+                    <div class="form-group">
+                        <label for="order-symbol">Símbolo:</label>
+                        <select id="order-symbol" class="input-field">
+                            <option value="BTCUSDT">BTCUSDT</option>
+                            <option value="ETHUSDT">ETHUSDT</option>
+                            <option value="BNBUSDT">BNBUSDT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order-side">Lado:</label>
+                        <select id="order-side" class="input-field">
+                            <option value="Buy">Buy (Comprar)</option>
+                            <option value="Sell">Sell (Vender)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order-type">Tipo:</label>
+                        <select id="order-type" class="input-field">
+                            <option value="Market">Market (Mercado)</option>
+                            <option value="Limit">Limit (Limitada)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order-qty">Quantidade:</label>
+                        <input type="number" id="order-qty" class="input-field" step="0.001" placeholder="0.001">
+                    </div>
+                    <div class="form-group" id="price-group" style="display:none;">
+                        <label for="order-price">Preço:</label>
+                        <input type="number" id="order-price" class="input-field" step="0.01" placeholder="0.00">
+                    </div>
+                    <button id="create-order-btn" class="btn btn-success">Criar Ordem</button>
+                    <div id="order-result" class="order-result"></div>
+                </section>
+            </div>
         </div>
     </div>
 
